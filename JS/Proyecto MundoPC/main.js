@@ -127,4 +127,22 @@ const orden1 = new Orden();
 orden1.agregarComputadora(computadora1);
 orden1.agregarComputadora(computadora2);
 
+function mostrarDetalles(componente) {
+  if (componente instanceof Computadora) {
+    console.log("=== Detalles de Computadora ===");
+    console.log(componente.toString());
+  } else if (componente instanceof Monitor) {
+    console.log("Es un Monitor: " + componente.toString());
+  } else if (componente instanceof Teclado) {
+    console.log("Es un Teclado: " + componente.toString());
+  } else if (componente instanceof Raton) {
+    console.log("Es un Raton: " + componente.toString());
+  } 
+}
+
+mostrarDetalles(monitor1);
+mostrarDetalles(teclado1);
+mostrarDetalles(raton1);
+mostrarDetalles(computadora1);
+
 console.log(orden1.mostrarOrden());
