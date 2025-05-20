@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Amigos de Usuario {{ user_id }}</title>
+</head>
+<body>
+    <h1>Amigos de Usuario {{ user_id }}</h1>
+    <ul>
+        {% for friend in friends %}
+            <li>
+                <strong>{{ friend.friend_user.name }}</strong> ({{ friend.friend_user.username }})
+                {% if friend.favourite %}
+                    ⭐ Favorito
+                {% endif %}
+                {% if friend.blocked %}
+                    🚫 Bloqueado
+                {% endif %}
+            </li>
+        {% else %}
+            <li>No tiene amigos.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

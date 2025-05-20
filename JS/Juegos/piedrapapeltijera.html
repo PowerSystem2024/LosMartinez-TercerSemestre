@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Piedra, Papel o Tijera</title>
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .player-options {
+      display: grid;
+      align-items: center;
+      grid-template-columns: 1fr 20vw 20vw 20vw 1fr;
+    }
+    .bot-options {
+      display: grid;
+      justify-content: center;
+    }
+    .result-container, .vs-container {
+      margin: 2rem 0;
+      font-size: 3rem;
+      font-weight: 800;
+      display: grid;
+      justify-content: center;
+    }
+    .play-again-btn {
+      background-color: #51666C;
+      color: #fff;
+      font-size: 2rem;
+      font-weight: 800;
+      margin-top: 1rem;
+      padding: 1rem 3rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .play-again-btn.hidden {
+      display: none;
+    }
+    .option-button {
+      display: flex;
+      transition: transform 0.2s;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+    .pc-img-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center
+    }
+    .option-button:hover, .play-again:hover {
+      transform: scale(1.2);
+    }
+    .option-img {
+      height: 20vh;
+      max-height: 150px;
+    }
+  </style>
+  <script>
+    var playerOption;
+    var pcOption;
+    
+    var optionsDisabled = false;
+    
+    var WIN = "Ganaste! :D"
+    var TIE = "Empate :I"
+    var LOSE = "Perdiste :C"
+  
+    var piedraImg = "https://www.rpsgame.org/assets/img/rock.svg";
+    var papelImg = "https://www.rpsgame.org/assets/img/paper.svg";
+    var tijeraImg = "https://www.rpsgame.org/assets/img/scissors.svg";
+    var questionImg = "https://cdn-icons-png.flaticon.com/512/3588/3588494.png";
+
+    // piedra = 1 papel = 2 tijera = 3 
+    var pptDictionaryPlayerPc = {
+      1: { 1: TIE, 2: LOSE, 3: WIN},
+      2: { 1: WIN, 2: TIE, 3: LOSE},
+      3: { 1: LOSE, 2: WIN, 3: TIE}
+    }
+
+    var pptImgDictionaryPc = {
+      1: piedraImg,
+      2: papelImg,
+      3: tijeraImg
+    }
+
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * max) + min;
+    }
+    
+    function playGame(value) {
+      setResult(value);
+      showPlayAgainBtn();
+    }
+
+    function setResult(value) {
+      setPcOption();
+      var result = pptDictionaryPlayerPc[playerOption][pcOption];
+      showResult(result);
+    }
+    
+    function setPcOption() {
+      pcOption = getRandomInt(1, 3);
+      const contenedor = document.getElementById("pc-option");
+      contenedor.querySelector("img").src = pptImgDictionaryPc[pcOption];
+    }
+
+    function showResult(result) {
+      document.getElementById("result").innerText = result;
+    }
+
+    function showPlayAgainBtn() {
+      document.getElementById("play-again").classList.remove('hidden');
+    }
+
+    // Botones
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("piedra").addEventListener("click", () => {
+        setPlayerOption(1);
+      });
+      document.getElementById("papel").addEventListener("click", () => {
+        setPlayerOption(2);
+      });
+      document.getElementById("tijera").addEventListener("click", () => {
+        setPlayerOption(3);
+      });
+      document.getElementById("play-again").addEventListener("click", () => {
+        restartGame();
+      });
+    });
+
+    function setPlayerOption(option) {
+      if (!optionsDisabled) {
+        playerOption = option;
+        optionsDisabled = true;
+        playGame();
+      }
+    }
+
+    function restartGame() {
+      playerOption = null;
+      pcOption = null;
+      optionsDisabled = false;
+      document.getElementById("option-img").src = questionImg;
+      document.getElementById("result").innerText = "";
+      document.getElementById("play-again").classList.add('hidden');
+    }
+
+  </script>
+</head>
+<body>
+  <div id="result" class="result-container"></div>
+
+  <div class="player-options">
+    <div class="option-button" style="grid-column: 2 / 3;" id="piedra">
+      <img class="option-img" src="https://www.rpsgame.org/assets/img/rock.svg">
+      Piedra
+    </div>
+    <div class="option-button" style="grid-column: 3 / 4;" id="papel">
+      <img class="option-img" src="https://www.rpsgame.org/assets/img/paper.svg">
+      Papel
+    </div>
+    <div class="option-button" style="grid-column: 4 / 5;" id="tijera">
+      <img class="option-img" src="https://www.rpsgame.org/assets/img/scissors.svg">
+      Tijera
+    </div>
+  </div>
+  <div class="vs-container">VS</div>
+  <div class="bot-options">
+    <div class="pc-img-container" id="pc-option">
+      <img class="option-img" id="option-img" src="https://cdn-icons-png.flaticon.com/512/3588/3588494.png">
+      Oponente
+    </div>
+  </div>
+
+  <div id="play-again" class="play-again-btn hidden">
+    Volver a Jugar
+  </div>
+</body>
+</html>

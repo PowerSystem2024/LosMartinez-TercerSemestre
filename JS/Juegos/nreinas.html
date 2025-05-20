@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>N Reinas</title>
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .board-contianer {
+        display: grid;
+        background-color: wheat;
+        padding: 2rem;
+    }
+    .board-tile {
+        height: 3rem;
+        width: 3rem;
+    }
+    label {
+        margin-bottom: .5rem;
+    }
+  </style>
+  <script>
+        var boardRows = 3;
+        var boardCols = 3;
+
+        var boardMatrix = [];
+        var queenMatrix = [];
+    // Botones
+
+    document.addEventListener("DOMContentLoaded", () => {
+        showBoard();
+    });
+
+    function generateBoard() {
+        for (var row = 1; row <= boardRows; row++) {
+            for (var col = 1; col <= boardCols; col++) {
+                boardMatrix.push([row, col]);
+            }
+        }
+    }
+
+    function generateQueens() {
+        queenMatrix.push([1,1]);
+        boardMatrix.forEach(function(tile) {
+            if(validQueen(tile[0], tile[1])) {
+                queenMatrix.push(tile);
+            }
+        });
+        showQueens();
+    }
+
+      function validQueen(row, col) {
+        for (let [qRow, qCol] of queenMatrix) {
+            if (
+                qCol === col || // misma columna
+                qRow === row || // misma fila
+                Math.abs(qRow - row) === Math.abs(qCol - col) // misma diagonal
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function showQueens() {
+        queenMatrix.forEach(function(tile) {
+            var tileDiv = document.getElementById('tile-'+tile[0]+'-'+tile[1]);
+            var img = document.createElement('img');
+            img.src = "https://static.wikia.nocookie.net/chess/images/4/42/LightQueen.png";
+            img.style.width = '100%';
+            img.style.height = '100%';
+            tileDiv.appendChild(img);
+        });
+    }
+
+    function showBoard() {
+        boardRows = parseInt(document.getElementById('inputRows').value);
+        boardCols = parseInt(document.getElementById('inputCols').value);
+        boardMatrix = [];
+
+        generateBoard();
+
+        var board = document.getElementById('board');
+        board.innerHTML = '';
+        board.style.gridTemplateColumns = 'repeat('+boardCols+', auto)'
+        board.style.gridTemplateRows = 'repeat('+boardRows+', auto)'
+
+        boardMatrix.forEach(tile => {
+            const tileDiv = document.createElement('div');
+            tileDiv.className = 'board-tile';
+            tileDiv.id = 'tile-'+tile[0]+'-'+tile[1];
+            tileDiv.style.backgroundColor = getTileStyle(tile)
+            board.appendChild(tileDiv);
+        });
+
+        generateQueens();
+    }
+
+    var currentColum = 1;
+    var toggleColor = false;
+    var lastColorWhite = true;
+
+    function getTileStyle(tile) {
+        if(tile[0] == currentColum) {
+            toggleColor = !toggleColor;
+            return toggleColor ? "white" : "gray"
+        } else {
+            currentColum = tile[0];
+            lastColorWhite = !lastColorWhite;
+            toggleColor = lastColorWhite;
+            return lastColorWhite ? "white" : "gray"
+        }
+    }
+
+  </script>
+</head>
+<body>
+    <label>Filas: <input type="number" id="inputRows" min="1" value="3"></label>
+    <label>Columnas: <input type="number" id="inputCols" min="1" value="3"></label>
+    <button onclick="showBoard()">Generar tablero</button>
+    <br>
+    <div id="board" class="board-contianer">
+    </div>
+</body>
+</html>
