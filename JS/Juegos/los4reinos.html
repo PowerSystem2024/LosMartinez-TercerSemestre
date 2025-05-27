@@ -61,8 +61,8 @@
     }
 
     img {
-        height: 20rem;
-        width: 20rem;
+        height: 15rem;
+        width: 15rem;
         object-fit: cover;
         aspect-ratio: 1;
     }
@@ -106,15 +106,21 @@
 
     function selectCharacter() {
       const radios = document.getElementsByName('character');
+      var hasOption = false;
       for (const radio of radios) {
         if (radio.checked) {
-          selectedCharacter = radio.value;
-          document.getElementById('attack-section').style.display = 'block';
-          document.getElementById('character').src = imgByCharacter[selectedCharacter];
-          alert(`Seleccionaste a ${selectedCharacter}`);
-          return;
+            hasOption = true;
+            selectedCharacter = radio.value;
+            document.getElementById('attack-section').style.display = 'block';
+            document.getElementById('character').src = imgByCharacter[selectedCharacter];
+            alert(`Seleccionaste a ${selectedCharacter}`);
+            return;
         }
       }
+
+      if(!hasOption) {
+          alert(`Seleccione un Personaje`);
+      } 
     }
 
     function attack(playerElement) {

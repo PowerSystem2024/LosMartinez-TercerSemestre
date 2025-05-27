@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salto del Caballo</title>
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .board-contianer {
+        display: grid;
+        background-color: wheat;
+        padding: 2rem;
+    }
+    .board-tile {
+        height: 3rem;
+        width: 3rem;
+    }
+    .board-tile.knight {
+      background-color: gold;
+    }
+    label {
+        margin-bottom: .5rem;
+    }
+  </style>
+  <script>
+    var knightPosition = null;
+
+    var boardRows = 3;
+    var boardCols = 3;
+
+    var boardMatrix = [];
+    var visitedDictionary = {};
+    var docBoardTiles = [];
+
+    // Todas las posibles posiciones que puede mover
+    const knightMoves = [
+      [-2, -1], [-2, 1],
+      [-1, -2], [-1, 2],
+      [1, -2], [1, 2],
+      [2, -1], [2, 1],
+    ];
+        
+    document.addEventListener("DOMContentLoaded", () => {
+        showBoard();
+    });
+
+    function generateBoard() {
+        for (var row = 1; row <= boardRows; row++) {
+            for (var col = 1; col <= boardCols; col++) {
+                boardMatrix.push([row, col]);
+                visitedDictionary[row+'-'+col] = false;
+            }
+        }
+    }
+
+    // Funciones de validacion de saltos
+    function isVisited(row, col) {
+        // Retorna si la casilla fue visitada o si esta fuera del tablero
+        return  row < 1 || row > boardRows || col < 1 || col > boardCols || 
+                visitedDictionary[row+'-'+col];
+    }
+
+    // Funcion que valida los saltos
+    function jumpToNext(row, col) {
+        // Verifico que este en los limites del tablero o fue visitada
+        if (isVisited(row, col)) { 
+            return;
+        } else {
+            visitedDictionary[row+'-'+col] = true;
+            placeKnight(row, col);
+            console.log(`Caballo visitó: (${row}, ${col})`);
+            // Iteramos para que encuentre el proximo salto
+            for (const [dr, dc] of knightMoves) {
+                jumpToNext(row + dr, col + dc);
+            }
+        }
+    }
+
+    // TODO PARTE VISUAL PERO SE VE EN CONSOLA
+    function placeKnight(row, col) {
+      clearBoard();
+      knightPosition = [row, col];
+      getTile(row, col).classList.add('knight');
+      jumpToNext(row, col);
+    }
+
+    function clearBoard() {
+      docBoardTiles.forEach(tile => tile.classList.remove('knight', 'reachable'));
+    }
+
+    function getTile(row, col) {
+      return document.getElementById('tile-'+row+'-'+col);
+    }
+
+    
+    // Muestra el tablero
+    function showBoard() {
+        boardRows = parseInt(document.getElementById('inputRows').value);
+        boardCols = parseInt(document.getElementById('inputCols').value);
+        boardMatrix = [];
+
+        generateBoard();
+
+        var board = document.getElementById('board');
+        board.innerHTML = '';
+        board.style.gridTemplateColumns = 'repeat('+boardCols+', auto)'
+        board.style.gridTemplateRows = 'repeat('+boardRows+', auto)'
+
+        docBoardTiles = [];
+        boardMatrix.forEach(tile => {
+            const tileDiv = document.createElement('div');
+            tileDiv.className = 'board-tile';
+            tileDiv.id = 'tile-'+tile[0]+'-'+tile[1];
+            tileDiv.style.backgroundColor = getTileStyle(tile);
+            tileDiv.addEventListener('click', () => placeKnight(tile[0], tile[1]));
+            docBoardTiles.push(tileDiv);
+            board.appendChild(tileDiv);
+        });
+    }
+
+    // CSS Del tablero
+    var currentColum = 1;
+    var toggleColor = false;
+    var lastColorWhite = true;
+
+    function getTileStyle(tile) {
+        if(tile[0] == currentColum) {
+            toggleColor = !toggleColor;
+            return toggleColor ? "white" : "gray"
+        } else {
+            currentColum = tile[0];
+            lastColorWhite = !lastColorWhite;
+            toggleColor = lastColorWhite;
+            return lastColorWhite ? "white" : "gray"
+        }
+    }
+
+  </script>
+</head>
+<body>
+    <label>Filas: <input type="number" id="inputRows" min="1" value="3"></label>
+    <label>Columnas: <input type="number" id="inputCols" min="1" value="3"></label>
+    <button onclick="showBoard()">Generar tablero</button>
+    <br>
+    <div id="board" class="board-contianer">
+    </div>
+</body>
+</html>
