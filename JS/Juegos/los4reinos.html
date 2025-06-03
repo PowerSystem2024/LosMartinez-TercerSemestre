@@ -83,10 +83,13 @@
 
   <div class="section" id="attack-section" style="display: none;">
     <img id="character" src="">
+    <img id="enemy" src="">
+
+    <h4 id="versus-text"></h4>
 
     <h2>Elige tu ataque</h2>
     <p>Tu personaje tiene 3 vidas</p>
-    <p>Los personajes del enemigo tienen 3 vidas</p>
+    <p>El enemigo tienen 3 vidas</p>
     <button onclick="attack('Fuego')">Fuego</button>
     <button onclick="attack('Agua')">Agua</button>
     <button onclick="attack('Tierra')">Tierra</button>
@@ -97,11 +100,12 @@
   <script>
     var selectedCharacter = null;
     const elements = ['Fuego', 'Agua', 'Tierra', 'Aire'];
+    const characters = ['Zuko', 'Katara', 'Aang', 'Toph'];
     const imgByCharacter = {
-        'Zuko': 'https://static.wikia.nocookie.net/avatar/images/4/4b/Zuko.png',
-        'Katara': 'https://static1.srcdn.com/wordpress/wp-content/uploads/2020/09/Katara-3-Cropped.jpg',
-        'Aang': 'https://sm.ign.com/ign_pk/cover/a/avatar-gen/avatar-generations_rpge.jpg',
-        'Toph': 'https://i.pinimg.com/736x/4e/00/11/4e00111c746f99e1a41374cf8ebb77c7.jpg'
+      'Zuko': 'https://static.wikia.nocookie.net/avatar/images/4/4b/Zuko.png',
+      'Katara': 'https://static1.srcdn.com/wordpress/wp-content/uploads/2020/09/Katara-3-Cropped.jpg',
+      'Aang': 'https://sm.ign.com/ign_pk/cover/a/avatar-gen/avatar-generations_rpge.jpg',
+      'Toph': 'https://i.pinimg.com/736x/4e/00/11/4e00111c746f99e1a41374cf8ebb77c7.jpg'
     } 
 
     function selectCharacter() {
@@ -109,17 +113,19 @@
       var hasOption = false;
       for (const radio of radios) {
         if (radio.checked) {
-            hasOption = true;
-            selectedCharacter = radio.value;
-            document.getElementById('attack-section').style.display = 'block';
-            document.getElementById('character').src = imgByCharacter[selectedCharacter];
-            alert(`Seleccionaste a ${selectedCharacter}`);
-            return;
+          var enemyCharacter = characters[Math.floor(Math.random() * elements.length)];
+          hasOption = true;
+          selectedCharacter = radio.value;
+          document.getElementById('attack-section').style.display = 'block';
+          document.getElementById('character').src = imgByCharacter[selectedCharacter];
+          document.getElementById('enemy').src = imgByCharacter[enemyCharacter];
+          document.getElementById('versus-text').innerText = `Seleccionaste a ${selectedCharacter} y tu enemigo a ${enemyCharacter}`;
+          return;
         }
       }
 
       if(!hasOption) {
-          alert(`Seleccione un Personaje`);
+        alert(`Seleccione un Personaje`);
       } 
     }
 
