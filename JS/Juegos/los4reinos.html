@@ -6,72 +6,90 @@
   <title>Avatar - Batalla de Elementos</title>
   <style>
     body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        background-color: #191c31;
-        color: #fff;
-        margin: 0;
-        padding: 2rem;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #191c31;
+      color: #fff;
+      margin: 0;
+      padding: 2rem;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     h1 {
-        font-size: 2rem;
-        margin-bottom: 1rem;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    li {
+      list-style: none;
+      padding-left: 0;
     }
 
     .elements {
-        font-size: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .rules {
+      cursor: pointer;
+      color:cadetblue
     }
 
     .section {
-        background-color: rgb(83, 83, 83);
-        color: #fff;
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin: 1rem auto;
-        width: 80%;
-        max-width: 500px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background-color: rgb(83, 83, 83);
+      color: #fff;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1rem auto;
+      width: 80%;
+      max-width: 500px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     button {
-        background-color: #303764;
-        border-radius: 8px;
-        margin: 0.5rem;
-        padding: 0.5rem 1rem;
-        font-size: 1rem;
-        cursor: pointer;
-        color: #fff;
-        border: none;
-        transition: transform 0.2s;
+      background-color: #303764;
+      border-radius: 8px;
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #fff;
+      border: none;
+      transition: transform 0.2s;
     }
 
     button:hover {
-        transform: scale(1.2);
+      transform: scale(1.2);
     }
 
     .result {
-        margin-top: 1rem;
-        font-weight: bold;
+      margin-top: 1rem;
+      font-weight: bold;
+      font-size: 1rem;
+      max-height: 20vh;
+      overflow-y: scroll;
     }
 
     img {
-        height: 15rem;
-        width: 15rem;
-        object-fit: cover;
-        aspect-ratio: 1;
+      height: 15rem;
+      width: 15rem;
+      object-fit: cover;
+      aspect-ratio: 1;
     }
+
+    .character-contianer {
+      display: inline-block;
+    }
+    
   </style>
 </head>
 <body>
   <h1> <span class="elements">🔥 💧 AVATAR 🪨 🌪️</span></h1>
 
-  <div class="section">
+  <div id="char-selector" class="section">
     <h2>Elige tu Personaje</h2>
     <label><input type="radio" name="character" value="Zuko"> Zuko</label>
     <label><input type="radio" name="character" value="Katara"> Katara</label>
@@ -82,71 +100,146 @@
   </div>
 
   <div class="section" id="attack-section" style="display: none;">
-    <img id="character" src="">
-    <img id="enemy" src="">
+    <div class="character-contianer">
+      <img id="character" src="">
+      <p>Tu personaje tiene <span id="your-lp" style="color: red;">3</span> vidas</p>
+    </div>
+
+    <div class="character-contianer">
+      <img id="enemy" src="">
+      <p>El enemigo tiene <span id="enemy-lp" style="color: red;">3</span> vidas</p>
+    </div>
 
     <h4 id="versus-text"></h4>
 
-    <h2>Elige tu ataque</h2>
-    <p>Tu personaje tiene 3 vidas</p>
-    <p>El enemigo tienen 3 vidas</p>
-    <button onclick="attack('Fuego')">Fuego</button>
-    <button onclick="attack('Agua')">Agua</button>
-    <button onclick="attack('Tierra')">Tierra</button>
-    <button onclick="attack('Aire')">Aire</button>
-    <p class="result" id="battle-result"></p>
+    <h2 id="attack-title">Elige tu ataque</h2>
+    <div id="attacks-container">
+      <!-- Aca van los ataques generados segun el array -->
+    </div>
+    <div class="result" id="battle-result">
+      <!-- Aca van los resultados de la pelea -->
+    </div>
+    <div id="reload" style="display: none; margin-top: 1rem;">
+      <button onclick="location.reload()">Recargar</button>
+    </div>
   </div>
 
+  <div> <span id="show-rules" class="rules" onclick="showRules()">Mostrar Reglas</span></div>
+  <div id="rules-container" class="section" style="display: none;">
+    <h2 style="margin-top: 0px;">Reglas del Juego</h2>
+    <p>
+      Bienvenido al juego de combate. Primero, debes <strong>seleccionar un personaje</strong>. Una vez seleccionado, tendrás <strong>3 vidas</strong> para enfrentarte al enemigo.
+    </p>
+    <p>
+      El sistema de combate se basa en una mecánica similar a <em>Piedra, Papel o Tijera</em>, utilizando los siguientes ataques:
+    </p>
+    <ul>
+      <li><strong>Punio ✊</strong> le gana a <strong>Barrida 🦶</strong></li>
+      <li><strong>Barrida 🦶</strong> le gana a <strong>Patada 🦵</strong></li>
+      <li><strong>Patada 🦵</strong> le gana a <strong>Punio ✊</strong></li>
+    </ul>
+    <p>
+      Elegí sabiamente tus ataques para derrotar al enemigo antes de quedarte sin vidas. ¡Buena suerte!
+    </p>
+  </div>
+  
   <script>
     var selectedCharacter = null;
-    const elements = ['Fuego', 'Agua', 'Tierra', 'Aire'];
+    var rulesVisible = false;
+
+    const attacks = ['Punio', 'Patada', 'Barrida'];
     const characters = ['Zuko', 'Katara', 'Aang', 'Toph'];
     const imgByCharacter = {
       'Zuko': 'https://static.wikia.nocookie.net/avatar/images/4/4b/Zuko.png',
       'Katara': 'https://static1.srcdn.com/wordpress/wp-content/uploads/2020/09/Katara-3-Cropped.jpg',
       'Aang': 'https://sm.ign.com/ign_pk/cover/a/avatar-gen/avatar-generations_rpge.jpg',
       'Toph': 'https://i.pinimg.com/736x/4e/00/11/4e00111c746f99e1a41374cf8ebb77c7.jpg'
-    } 
+    }
+
+    attacks.forEach(attack => {
+      var button = document.createElement('button');
+      button.id = 'boton-' + attack;
+      button.textContent = attack;
+      button.onclick = () => attackFunction(attack);
+
+      document.getElementById('attacks-container').appendChild(button);
+    });
+
+    function showRules() {
+      rulesVisible = !rulesVisible;
+
+      if(rulesVisible) {
+        document.getElementById('show-rules').innerText = "Ocultar Reglas";
+        document.getElementById('rules-container').style.display = "block";
+      } else {
+        document.getElementById('show-rules').innerText = "Mostrar Reglas";
+        document.getElementById('rules-container').style.display = "none";
+      }
+    }
 
     function selectCharacter() {
       const radios = document.getElementsByName('character');
       var hasOption = false;
       for (const radio of radios) {
         if (radio.checked) {
-          var enemyCharacter = characters[Math.floor(Math.random() * elements.length)];
+          var enemyCharacter = characters[Math.floor(Math.random() * attacks.length)];
           hasOption = true;
           selectedCharacter = radio.value;
           document.getElementById('attack-section').style.display = 'block';
           document.getElementById('character').src = imgByCharacter[selectedCharacter];
           document.getElementById('enemy').src = imgByCharacter[enemyCharacter];
           document.getElementById('versus-text').innerText = `Seleccionaste a ${selectedCharacter} y tu enemigo a ${enemyCharacter}`;
-          return;
         }
       }
-
+      
       if(!hasOption) {
         alert(`Seleccione un Personaje`);
-      } 
+      } else {
+        document.getElementById('char-selector').style.display = 'none';
+      }
     }
 
-    function attack(playerElement) {
-      const enemyElement = elements[Math.floor(Math.random() * elements.length)];
-      var resultMessage = `Atacaste con ${playerElement.toUpperCase()}, tu enemigo con ${enemyElement.toUpperCase()} `;
+    function attackFunction(playerAttack) {
+      const enemyAttack = attacks[Math.floor(Math.random() * attacks.length)];
 
       if (
-        (playerElement === 'Fuego' && enemyElement === 'Tierra') ||
-        (playerElement === 'Agua' && enemyElement === 'Fuego') ||
-        (playerElement === 'Tierra' && enemyElement === 'Aire') ||
-        (playerElement === 'Aire' && enemyElement === 'Agua')
+        (playerAttack === 'Punio' && enemyAttack === 'Barrida') ||
+        (playerAttack === 'Patada' && enemyAttack === 'Punio') ||
+        (playerAttack === 'Barrida' && enemyAttack === 'Patada')
       ) {
-        resultMessage += '¡GANASTE!';
-      } else if (playerElement === enemyElement) {
-        resultMessage += '¡EMPATE!';
+        newAction('¡Le Pegaste!', 'limegreen');
+        lowerLife('enemy');
+      } else if (playerAttack === enemyAttack) {
+        newAction('Ambos Bloquean', 'gray');
       } else {
-        resultMessage += 'PERDISTE...';
+        newAction('Te Pegaron', 'red');
+        lowerLife('your');
       }
 
-      document.getElementById('battle-result').textContent = resultMessage;
+      var resultMessage = `Atacaste con ${playerAttack.toUpperCase()}, tu enemigo respondio con ${enemyAttack.toUpperCase()} `;
+      newAction(resultMessage);
+    } 
+
+    function lowerLife(player) {
+      var lifePointsContainer = document.getElementById(player + '-lp');
+      const lp = parseInt(lifePointsContainer.innerText) - 1;
+      lifePointsContainer.innerText = lp;
+      
+      if(lp == 0) { 
+        player == 'enemy' ? alert(`Ganaste!`) : alert(`Perdiste...`);
+        document.getElementById('attacks-container').style.display = 'none';
+        document.getElementById('attack-title').style.display = 'none';
+        document.getElementById('reload').style.display = 'block';
+      }
+    }
+
+    function newAction(resultMessage, color) {
+      var action = document.createElement('div');
+      action.innerHTML = resultMessage;
+      action.style.color = color || 'inherit';
+
+      var resultContainer = document.getElementById('battle-result');
+      resultContainer.insertBefore(action, resultContainer.firstChild);
     }
   </script>
 </body>

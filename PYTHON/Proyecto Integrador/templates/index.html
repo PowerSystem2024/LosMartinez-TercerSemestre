@@ -3,288 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Vapor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/style.css') }}">
 </head>
-<style>
-    :root {
-        --background: #1b2838;
-        --second-background: #171a21;
-        --terciary-background: #364250;
-        --text: #dcdedf; 
-        --primary: #536f86;
-        --secondary: #c7d5e0;
-        --highlight: #66c0f4;
-        --highlight-text: #67c1f5;
-    }
-    body {
-        font-family: "Motiva Sans", Sans-serif;
-        background: var(--background);
-        margin: 0;
-        width: max-content;
-        overflow-x: hidden;
-    }
-    .simple-button {
-        padding: 0 7px;
-        color: var(--highlight-text);
-        background-color: rgba(103, 193, 245, 0.2);
-        margin-right: 2px;
-        margin-bottom: 3px;
-        border-radius: 2px;
-        cursor: pointer;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: fit-content;
-        transition: transform 100ms ease;
-    }
-    .simple-button:hover  {
-        transform: scale(1.2);
-    }
-    .main-container {
-        display: grid;
-        grid-template-columns: minmax(50px, 1fr) repeat(4, minmax(auto, 15rem)) minmax(50px, 1fr);
-        grid-template-rows: 6rem 30rem 0px 3rem auto 1rem auto 10rem;
-    }
-    .navegation-background {
-        grid-column: 1 / 7;
-        grid-row-start: 1;
-        background: var(--second-background);
-        z-index: 10;
-    }
-    .navegation-container {
-        grid-column: 2 / 6;
-        grid-row-start: 1;
-        align-self: center;
-        z-index: 20;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        color: var(--text);
-    }
-    .banner-background {
-        grid-column: 1 / 7;
-        grid-row: 2 / 3;
-        z-index: 10;
-    }
-    .banner-container {
-        grid-column: 2 / 6;
-        grid-row: 2 / 3;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 20;
-    }
-    .banner-shading {
-        background-color: var(--background);
-        opacity: 0.5;
-        margin: -4px 0px;
-    }
-    .action-buttons-container {
-        grid-column: 2 / 6;
-        grid-row: 3;
-        align-self: center;
-        z-index: 20;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 4rem;
-        position: relative;
-    }
-    .filters-container {
-        grid-column: 1 / 2;
-        grid-row: 5 / 8;
-    }
-    .feature-game-container {
-        grid-column: 2 / 6;
-        grid-row: 5 / 6;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: min-content auto min-content;
-        color: var(--text);
-    }
-    .game-list-container {
-        grid-column: 2 / 6;
-        grid-row: 7 / 8;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: min-content auto min-content;
-        color: var(--text);
-        gap: 1rem;
-    }
-
-    .navigation-text {
-        font-size: 1.5rem;
-        font-weight: 400;
-    }
-    .main-title {
-        font-size: 3rem;
-        color: var(--text);
-    }
-    .secondary-title {
-        font-size: 2rem;
-        color: var(--text);
-    }
-    .description {
-        font-size: 1rem;
-        color: var(--text);
-    }
-    .logo-img {
-        height: 10rem;
-    }
-    .navigation-img {
-        height: 3rem;
-    }
-    .banner-img {
-        height: 100%;
-        width: 100vw;
-        max-height: 30rem;
-        filter: blur(3px) grayscale();
-        object-fit: cover;
-    }
-    .banner-text {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .main-search {
-        background-color: var(--primary);
-        color: var(--text);
-        font-size: 1.5rem;
-        height: 65%;
-        width: 90%;
-        border-radius: 50px;
-        padding: 0 1rem;
-        border: none;
-    }
-    .main-search::placeholder {
-        color: var(--text);
-    }
-    .search-icon {
-        position: absolute;
-        right: 3rem;
-        color: var(--text);
-        font-size: 1.5rem;
-    }
-    .filter-section {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin: 0 1rem 1rem 1rem;
-    }
-    .filter-section-title {
-        color: var(--primary);
-        font-weight: 600;
-        font-size: 1.2rem;
-        line-height: 1.5;
-    }
-    .filter-section-tag {
-        color: var(--secondary);
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 1;
-    }
-    .featured-game-title {
-        grid-column: 1 / 4;
-        grid-row: 1 / 2;
-        color: var(--text);
-        font-size: 2rem;
-        margin-bottom: .5rem;
-    }
-    .featured-game-video-container {
-        grid-column: 1 / 3;
-        grid-row: 2 / 3;
-    }
-    .featured-game-video {
-        width: 100%;
-        aspect-ratio: 1.5;
-        object-fit: cover;
-    }
-    .featured-game-info-container {
-        grid-column: 3 / 4;
-        grid-row: 2 / 4;
-        margin-left: .5rem;
-        background: var(--second-background);
-        display: grid;
-        grid-template-rows: min-content 1rem max-content auto min-content 1rem;
-        grid-template-columns: 1rem auto 1rem;
-        height: 100%;
-    }
-    .game-image {
-        grid-row: 1 / 2;
-        grid-column: 1 / 4;
-        width: 100%;
-        aspect-ratio: 2;
-        object-fit: cover;
-    }
-    .featured-game-description {
-        grid-row: 3 / 4;
-        grid-column: 2 / 3;
-        font-size: .8rem;
-        color: var(--text);
-    }
-    .featured-game-tags-container {
-        grid-row: 5 / 6;
-        grid-column: 2 / 3;
-    }
-    .featured-game-tags {
-        display: flex;
-        color: var(--text);
-    }
-    .tag-title {
-        color: var(--primary);
-        font-size: .8rem;
-        margin: .2rem 0;
-    }
-    .tag {
-        font-size: .5rem;
-        display: inline-block;
-        line-height: 19px;
-    }
-    .featured-game-action-buttons {
-        grid-row: 3 / 4;
-        grid-column: 1 / 3;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-    }
-    .featured-game-action-buttons .simple-button {
-        line-height: 2rem;
-        padding: 0 15px;
-        font-size: .8rem;
-        margin-bottom: 0;
-    }
-    .price-and-buttons-container {
-        display: flex;
-        gap: .5rem;
-        align-items: center;
-    }
-    .featured-game-price {
-        display: flex;
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--text);
-        background: var(--second-background);
-        padding: .5rem 1rem;
-        border-radius: 5px;
-        align-items: center;
-    }
-    .game-info {
-        box-shadow: 0 0 5px #000;
-        background: var(--terciary-background);
-        cursor: pointer;
-    }
-    .game-price-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 5px;
-        line-height: 1.5rem;
-        margin-left: .5rem;
-    }
-    .game-price {
-        background: var(--background);
-        padding: 3px 6px;
-    }
-</style>
 <body>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
@@ -295,6 +15,13 @@
             <div class="navigation-text">TIENDA</div>
             <div class="navigation-text">BIBLIOTECA</div>
             <div class="navigation-text">PERFIL</div>
+            <div id="user-container" class="user-profile-container" data-user="{{ user | tojson | safe }}">
+                <img class="profile-img" src="{{user.profile_picture_url}}">
+                <div>
+                    <div class="user-name">{{user.username}}</div>
+                    <div class="user-email">{{user.email}}</div>
+                </div>
+            </div>
         </div>
         <div class="banner-background">
             <img class="banner-img" src="https://r.testifier.nl/Acbs8526SDKI/resizing_type:fill/width:1200/height:630/plain/https%3A%2F%2Fs3-newsifier.ams3.digitaloceanspaces.com%2Fxgn.nl%2Fimages%2F2024-03%2Fstill-image-xbox-game-pass-2-ea-play-title-cardsf1620123579-6601a5389664a.png@webp" alt="">
@@ -338,25 +65,25 @@
             </div>
         </div>
         <div class="feature-game-container">
-            <div class="featured-game-title"> Counter-Strike 2 </div>
+            <div id="fg-title" class="featured-game-title"> Counter-Strike 2 </div>
             <div class="featured-game-video-container">
-                <video class="featured-game-video" controls>
-                    <source src="https://video.fastly.steamstatic.com/store_trailers/256972298/movie480_vp9.webm" type="video/webm">
+                <video id="fg-video" class="featured-game-video" controls>
+                    <source id="fg-video-src" src="https://video.fastly.steamstatic.com/store_trailers/256972298/movie480_vp9.webm" type="video/webm">
                     Tu navegador no soporta la etiqueta de video.
                 </video>
             </div>
             <div class="featured-game-info-container">
-                <img class="game-image" src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/capsule_616x353.jpg" alt="">
-                <div class="featured-game-description">
-                    For over two decades, Counter-Strike has offered an elite competitive experience, one shaped by millions of players from across the globe. And now the next chapter in the CS story is about to begin. This is Counter-Strike 2.
+                <img id="fg-image" class="game-image" src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/capsule_616x353.jpg" alt="">
+                <div id="fg-description" class="featured-game-description">
+                    Shooter táctico en primera persona con enfoque competitivo y multijugador.
                 </div>
                 <div class="featured-game-tags-container">
-                    <div class="tag-title">DEVELOPER: </div>
+                    <div class="tag-title">RELEASE: </div>
                     <div class="featured-game-tags">
-                        <div class="tag simple-button">VALVE</div>
+                        <div id="fg-relaese" class="tag simple-button">09/2022</div>
                     </div>
                     <div class="tag-title">TAGS: </div>
-                    <div class="featured-game-tags">
+                    <div id="fg-tags" class="featured-game-tags">
                         <div class="tag simple-button">SHOOTER</div>
                         <div class="tag simple-button">MULTIPLAYER</div>
                         <div class="tag simple-button">FREE TO PLAY</div>
@@ -366,24 +93,14 @@
             </div>
             <div class="featured-game-action-buttons">
                 <div class="price-and-buttons-container">
-                    <div class="featured-game-price">$0.00</div>
-                    <div class="simple-button">COMPRAR</div>
-                    <div class="simple-button">IGNORAR</div>
+                    <div id="fg-price" class="featured-game-price">$0.00</div>
                 </div>
-                <div class="simple-button">SIGUIENTE</div>
+                <div class="simple-button">COMPRAR</div>
             </div>
         </div>
         <div class="game-list-container">
             {% for game in games %}
-                <!-- <div class="game-info">
-                    <img class="game-image" src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/capsule_616x353.jpg" alt="">
-                    <div class="game-price-container">
-                        <span class="game-price">
-                            $0.00
-                        </span>
-                    </div>
-                </div> -->
-                <div class="game-info">
+                <div id="game-{{game.id}}" class="game-info" data-game='{{ game | tojson | safe }}'>
                     <img class="game-image" src="{{game.logo_img_url}}" alt="">
                     <div class="game-price-container">
                         {{game.title}}
@@ -395,5 +112,6 @@
             {% endfor %}
         </div>
     </div>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>

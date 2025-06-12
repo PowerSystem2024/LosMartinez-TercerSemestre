@@ -112,12 +112,12 @@
         return;
       }
 
-      // Mueve el duscon-1 de la torre towerA a towerC usando towerB como auxiliar
+      // Mueve el disco n-1 de la torre towerA a towerC usando towerB como auxiliar
       hanoi(n - 1, towerA, towerC, towerB, steps);
 
       steps.push([towerA, towerB]);
 
-      // Mueve el dusco n-1 de la torre towerC a towerB usando towerA como auxiliar
+      // Mueve el disco n-1 de la torre towerC a towerB usando towerA como auxiliar
       hanoi(n - 1, towerC, towerB, towerA, steps);
     }
 
@@ -132,7 +132,7 @@
           const lastDisk = fromTowerElement.lastElementChild;
           toTowerElement.appendChild(lastDisk);
           console.log(step);
-        }, 300 * index);
+        }, 400 * index);
       });
     }
 

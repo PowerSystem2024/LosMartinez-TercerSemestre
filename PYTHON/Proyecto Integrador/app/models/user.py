@@ -34,6 +34,15 @@ class User(DbModel):
         self.email = email
         self.profile_picture_url = profile_picture_url
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'username': self.username,
+            'email': self.email,
+            'profile_picture_url': self.profile_picture_url
+        }
+
     def allFriends(self):
         # Creo una query generica con Friends
         query = User.getFriendsQuery(self)

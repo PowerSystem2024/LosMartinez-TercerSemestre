@@ -42,6 +42,16 @@ class Game(DbModel):
         self.video_url = video_url
         self.logo_img_url = logo_img_url
 
+    def to_dict(self):
+        return {
+            'title': self.title,
+            'desc': self.desc,
+            'release_date': self.release_date,
+            'price': self.price,
+            'video_url': self.video_url,
+            'logo_img_url': self.logo_img_url
+        }
+
     def getByFriends(user_id):
         all_games_by_friends = (
             session.query(
