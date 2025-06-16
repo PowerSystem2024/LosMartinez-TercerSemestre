@@ -2,24 +2,69 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Amigos de Usuario {{ user_id }}</title>
+    <title>Vapor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/style.css') }}">
 </head>
 <body>
-    <h1>Amigos de Usuario {{ user_id }}</h1>
-    <ul>
-        {% for friend in friends %}
-            <li>
-                <strong>{{ friend.friend_user.name }}</strong> ({{ friend.friend_user.username }})
-                {% if friend.favourite %}
-                    ⭐ Favorito
-                {% endif %}
-                {% if friend.blocked %}
-                    🚫 Bloqueado
-                {% endif %}
-            </li>
-        {% else %}
-            <li>No tiene amigos.</li>
-        {% endfor %}
-    </ul>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <div class="main-container profile">
+        <div class="navegation-background"></div>
+        <div class="navegation-container">
+            <img class="navigation-img" src="{{ url_for('static', filename='assets/logo.png') }}" alt="">
+            <div class="navigation-text"><a href="/api/user/{{user.id}}/store">TIENDA</a></div>
+            <div class="navigation-text"><a href="/api/user/{{user.id}}/library">BIBLIOTECA</a></div>
+            <div class="navigation-text bold">PERFIL</div>
+            <div id="user-container" class="user-profile-container" data-user='{{ user | tojson | safe }}'>
+                <img id="profile-img" class="profile-img" src="{{user.profile_picture_url}}">
+                <div>
+                    <div class="user-name">
+                        <span id="user-name" >{{user.name}}</span> 
+                        <span id="user-username"  style="color: var(--highlight-text);">({{user.username}})</span>
+                    </div>
+                    <div id="user-email" class="user-email">{{user.email}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-section">
+            <h2>Mis Datos</h2>
+            <form class="form-container">
+                <div class="input-container">
+                    <label for="name" class="form-label">Nombre:</label>
+                    <input type="text" class="form-input" id="name" value="{{user.name}}" name="name" required>
+                </div>
+                <div class="input-container">
+                    <label for="username" class="form-label">Usuario:</label>
+                    <input type="text" class="form-input" id="username" value="{{user.username}}" name="username" required>
+                </div>
+                <div class="input-container">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" class="form-input" id="email" value="{{user.email}}" name="email" required>
+                </div>
+                <div class="input-container">
+                    <label for="profile_picture_url" class="form-label">Avatar:</label>
+                    <input type="url" class="form-input" id="profile_picture_url" value="{{user.profile_picture_url}}" name="profile_picture_url">
+                </div>
+                <div type="submit" class="simple-button submit-button" onclick="saveProfile()">Guardar</div>
+            </form>
+        </div>
+        <div class="friends-section">
+            <h2>Mis Amigos</h2>
+            <div class="friend-container">
+                {% for friend in user.friends %}
+                <div class="friend-card">
+                    <img class="profile-img" src="{{friend.profile_picture_url}}">
+                    <div>
+                        <div class="user-name">{{friend.name}} <span style="color: var(--highlight-text);">({{friend.username}})</span></div>
+                        <div class="user-email">{{friend.email}}</div>
+                    </div>
+                </div>
+                {% else %}
+                <div>No tiene amigos.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/user_profile.js') }}"></script>
 </body>
 </html>

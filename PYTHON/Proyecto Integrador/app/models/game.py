@@ -44,14 +44,19 @@ class Game(DbModel):
 
     def to_dict(self):
         return {
+            'id': self.id,
             'title': self.title,
             'desc': self.desc,
             'release_date': self.release_date,
             'price': self.price,
             'video_url': self.video_url,
-            'logo_img_url': self.logo_img_url
+            'logo_img_url': self.logo_img_url,
+            'categories': [gc.to_dict() for gc in self.categories]
         }
-
+    
+    def to_dict_id(self):
+        return self.id
+    
     def getByFriends(user_id):
         all_games_by_friends = (
             session.query(

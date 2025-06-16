@@ -20,7 +20,11 @@ class User(DbModel):
     # Relationships para Sqlalchemy
     my_friends = relationship('Friend', foreign_keys='Friend.user_id_1', back_populates='user1')
     friend_of = relationship('Friend', foreign_keys='Friend.user_id_1', back_populates='user2')
-    user_games = relationship("UserGame", back_populates="user")
+    user_games = relationship('UserGame', back_populates='user')
+
+    @property
+    def friends(self):
+        return [fr.user2 for fr in self.my_friends]
 
     @property
     def games(self):
@@ -34,14 +38,25 @@ class User(DbModel):
         self.email = email
         self.profile_picture_url = profile_picture_url
 
-    def to_dict(self):
-        return {
+    def to_dict(self, relations=None):
+        user = {
             'id': self.id,
             'name': self.name,
             'username': self.username,
             'email': self.email,
-            'profile_picture_url': self.profile_picture_url
+            'profile_picture_url': self.profile_picture_url,
         }
+
+        relations = relations or []
+
+        if 'game_ids' in relations:
+            user['game_ids'] = [game.to_dict_id() for game in self.games]
+        elif 'games' in relations:
+            user['games'] = [game.to_dict() for game in self.games]
+        elif 'friends' in relations:
+            user['friends'] = [friend.to_dict() for friend in self.friends]
+
+        return user
 
     def allFriends(self):
         # Creo una query generica con Friends

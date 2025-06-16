@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Vapor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/style.css') }}">
+</head>
+<body>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <div class="main-container profile">
+        <div class="navegation-background"></div>
+        <div class="navegation-container">
+            <img class="navigation-img" src="{{ url_for('static', filename='assets/logo.png') }}" alt="">
+            <div class="navigation-text"><a href="/api/user/{{user.id}}/store">TIENDA</a></div>
+            <div class="navigation-text bold">BIBLIOTECA</div>
+            <div class="navigation-text"><a href="/api/user/{{user.id}}/user_profile">PERFIL</a></div>
+            <div id="user-container" class="user-profile-container" data-user='{{ user | tojson | safe }}' 
+                 data-friends-by-game='{{ friends_by_game | tojson | safe }}'>
+                <img class="profile-img" src="{{user.profile_picture_url}}">
+                <div>
+                    <div class="user-name">{{user.name}} <span style="color: var(--highlight-text);">({{user.username}})</span></div>
+                    <div class="user-email">{{user.email}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="games-section">
+            <h2>Mis Juegos</h2>
+            <div class="game-container">
+                {% for game in user.games %}
+                <div id="game-{{game.id}}" class="game-card">
+                    <img class="library-game-image" src="{{game.logo_img_url}}">
+                    <div>
+                        <div class="game-title">{{game.title}}</div>
+                        <div class="game-desc">{{game.desc}}</div>
+                    </div>
+                    <div class="game-friends-container">
+                        <div class="game-title">Tambien lo tienen:</div>
+                        <div id="game-friends-{{game.id}}" class="game-friends">
+                            <span style="color: var(--primary);">Ningun amigo tiene este juego</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/library.js') }}"></script>
+</body>
+</html>

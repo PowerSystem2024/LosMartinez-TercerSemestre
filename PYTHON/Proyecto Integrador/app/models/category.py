@@ -15,3 +15,9 @@ class Category(DbModel):
     @property
     def games(self):
         return [gc.game for gc in self.game_categories]
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'tag': self.tag
+        }

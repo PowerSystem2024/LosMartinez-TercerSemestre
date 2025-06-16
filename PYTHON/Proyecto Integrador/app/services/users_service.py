@@ -17,12 +17,11 @@ class UsersService:
         return user
 
     @staticmethod
-    def update_user(user_id, name=None, username=None, password=None, email=None, profile_picture_url=None):
+    def update_user(user_id, name=None, username=None, email=None, profile_picture_url=None):
         user = User.find(user_id)
 
         user.name = name
         user.username = username
-        user.password = password
         user.email = email
         user.profile_picture_url = profile_picture_url
 

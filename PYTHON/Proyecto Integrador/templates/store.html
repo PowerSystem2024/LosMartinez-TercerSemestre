@@ -8,17 +8,18 @@
 <body>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <div class="main-container">
+    <div class="main-container store">
         <div class="navegation-background"></div>
         <div class="navegation-container">
-            <img class="navigation-img" src="https://community.fastly.steamstatic.com/public/shared/images/responsive/header_logo.png" alt="">
-            <div class="navigation-text">TIENDA</div>
-            <div class="navigation-text">BIBLIOTECA</div>
-            <div class="navigation-text">PERFIL</div>
-            <div id="user-container" class="user-profile-container" data-user="{{ user | tojson | safe }}">
+            <img class="navigation-img" src="{{ url_for('static', filename='assets/logo.png') }}" alt="">
+            <div class="navigation-text bold">TIENDA</div>
+            <div class="navigation-text"><a href="/api/user/{{user.id}}/library">BIBLIOTECA</a></div>
+            <div class="navigation-text"><a href="/api/user/{{user.id}}/user_profile">PERFIL</a></div>
+            <div id="user-container" class="user-profile-container" data-user='{{ user | tojson | safe }}'
+                 data-friends-by-game='{{ friends_by_game | tojson | safe }}'>
                 <img class="profile-img" src="{{user.profile_picture_url}}">
                 <div>
-                    <div class="user-name">{{user.username}}</div>
+                    <div class="user-name">{{user.name}} <span style="color: var(--highlight-text);">({{user.username}})</span></div>
                     <div class="user-email">{{user.email}}</div>
                 </div>
             </div>
@@ -65,37 +66,32 @@
             </div>
         </div>
         <div class="feature-game-container">
-            <div id="fg-title" class="featured-game-title"> Counter-Strike 2 </div>
+            <div id="fg-title" class="featured-game-title">  </div>
             <div class="featured-game-video-container">
                 <video id="fg-video" class="featured-game-video" controls>
-                    <source id="fg-video-src" src="https://video.fastly.steamstatic.com/store_trailers/256972298/movie480_vp9.webm" type="video/webm">
+                    <source id="fg-video-src" src="" type="video/webm">
                     Tu navegador no soporta la etiqueta de video.
                 </video>
             </div>
             <div class="featured-game-info-container">
-                <img id="fg-image" class="game-image" src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/730/capsule_616x353.jpg" alt="">
-                <div id="fg-description" class="featured-game-description">
-                    Shooter táctico en primera persona con enfoque competitivo y multijugador.
-                </div>
+                <img id="fg-image" class="game-image" src="" alt="">
+                <div id="fg-description" class="featured-game-description"></div>
                 <div class="featured-game-tags-container">
+                    <div class="tag-title">TAMBIEN LO TIENEN: </div>
+                    <div id="fg-friends" class="featured-game-friends"></div>
                     <div class="tag-title">RELEASE: </div>
                     <div class="featured-game-tags">
-                        <div id="fg-relaese" class="tag simple-button">09/2022</div>
+                        <div id="fg-relaese" class="tag simple-button"></div>
                     </div>
                     <div class="tag-title">TAGS: </div>
-                    <div id="fg-tags" class="featured-game-tags">
-                        <div class="tag simple-button">SHOOTER</div>
-                        <div class="tag simple-button">MULTIPLAYER</div>
-                        <div class="tag simple-button">FREE TO PLAY</div>
-                        <div class="tag simple-button">TACTIC</div>
-                    </div>
+                    <div id="fg-tags" class="featured-game-tags"></div>
                 </div>
             </div>
             <div class="featured-game-action-buttons">
                 <div class="price-and-buttons-container">
-                    <div id="fg-price" class="featured-game-price">$0.00</div>
+                    <div id="fg-price" class="featured-game-price"></div>
                 </div>
-                <div class="simple-button">COMPRAR</div>
+                <div id="buy-button" class="simple-button"></div>
             </div>
         </div>
         <div class="game-list-container">
@@ -112,6 +108,6 @@
             {% endfor %}
         </div>
     </div>
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/store.js') }}"></script>
 </body>
 </html>

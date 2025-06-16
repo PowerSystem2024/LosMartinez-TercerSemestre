@@ -12,3 +12,9 @@ class UserGame(DbModel):
 
     game = relationship("Game", back_populates="user_games")
     user = relationship("User", back_populates="user_games")
+
+    def to_dict(self):
+        return {
+            'game': self.game.to_dict(),
+            'user': self.user.to_dict()
+        }
