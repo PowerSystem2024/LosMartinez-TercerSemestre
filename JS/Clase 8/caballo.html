@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salto del Caballo</title>
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .board-contianer {
+        display: grid;
+        background-color: wheat;
+        padding: 2rem;
+    }
+    .board-tile {
+        height: 3rem;
+        width: 3rem;
+    }
+    .board-tile.knight {
+      background-color: gold !important;
+    }
+    .board-tile.visited {
+      opacity: 0.5;
+    }
+    label {
+        margin-bottom: .5rem;
+    }
+  </style>
+  <script>
+    var knightPosition = null;
+
+    var boardRows = 8;
+    var boardCols = 8;
+
+    var boardMatrix = [];
+    var visitedDictionary = {};
+    var docBoardTiles = [];
+    var knightJumps = [];
+
+    // Todas las posibles posiciones que puede mover
+    const knightMoves = [
+      [-2, -1], [-2, 1],
+      [-1, -2], [-1, 2],
+      [1, -2], [1, 2],
+      [2, -1], [2, 1],
+    ];
+        
+    document.addEventListener("DOMContentLoaded", () => {
+      showBoard();
+    });
+
+    function generateBoard() {
+      for (var row = 1; row <= boardRows; row++) {
+        for (var col = 1; col <= boardCols; col++) {
+          boardMatrix.push([row, col]);
+          visitedDictionary[row+'-'+col] = false;
+        }
+      }
+    }
+
+    // Funciones de validacion de saltos
+    function isVisited(row, col) {
+      // Retorna si la casilla fue visitada o si esta fuera del tablero
+      return  row < 1 || row > boardRows || col < 1 || col > boardCols || 
+              visitedDictionary[row+'-'+col];
+    }
+
+    // Funcion que valida los saltos
+    async function jumpToNext(row, col) {
+      // Verifico que este en los limites del tablero o fue visitada
+      if (isVisited(row, col)) { 
+        return;
+      } else {
+        tries = 0;
+        visitedDictionary[row+'-'+col] = true;
+        knightPosition = [row, col];
+        knightJumps.push([row, col]);
+        // Iteramos para que encuentre el proximo salto
+        for (const [dr, dc] of knightMoves) {
+          if(tries < 8) {
+            stopTrying = true;
+          }
+          tries++;
+          await jumpToNext(row + dr, col + dc);
+        }
+      }
+      return;
+    }
+
+    function clearBoard() {
+      docBoardTiles.forEach(tile => tile.classList.remove('knight', 'reachable'));
+    }
+
+    function getTile(row, col) {
+      return document.getElementById('tile-'+row+'-'+col);
+    }
+
+    
+    // Muestra el tablero
+    function showBoard() {
+      boardRows = parseInt(document.getElementById('inputRows').value);
+      boardCols = parseInt(document.getElementById('inputCols').value);
+      boardMatrix = [];
+
+      generateBoard();
+
+      var board = document.getElementById('board');
+      board.innerHTML = '';
+      board.style.gridTemplateColumns = 'repeat('+boardCols+', auto)'
+      board.style.gridTemplateRows = 'repeat('+boardRows+', auto)'
+
+      docBoardTiles = [];
+      boardMatrix.forEach(tile => {
+        const tileDiv = document.createElement('div');
+        tileDiv.className = 'board-tile';
+        tileDiv.id = 'tile-'+tile[0]+'-'+tile[1];
+        tileDiv.style.backgroundColor = getTileStyle(tile);
+        tileDiv.addEventListener('click', function() {
+          startJump(tile[0], tile[1]);
+        });
+        docBoardTiles.push(tileDiv);
+        board.appendChild(tileDiv);
+      });
+    }
+
+    function startJump(row, col) {
+      jumpToNext(row, col).then(() => {
+        placeKnight(0);
+      });
+    }
+
+    function placeKnight(index) {
+      if(knightJumps.length >= index + 1) {
+        setTimeout(() => {
+          clearBoard();
+          var tile = getTile(knightJumps[index][0], knightJumps[index][1]);
+          tile.classList.add('knight');
+          tile.classList.add('visited');
+          tile.innerText = index + 1;
+          placeKnight(index + 1);
+        }, 100);
+      }
+    }
+
+    // CSS Del tablero
+    var currentColum = 1;
+    var toggleColor = false;
+    var lastColorWhite = true;
+
+    function getTileStyle(tile) {
+      if(tile[0] == currentColum) {
+        toggleColor = !toggleColor;
+        return toggleColor ? "white" : "gray"
+      } else {
+        currentColum = tile[0];
+        lastColorWhite = !lastColorWhite;
+        toggleColor = lastColorWhite;
+        return lastColorWhite ? "white" : "gray"
+      }
+    }
+
+  </script>
+</head>
+<body>
+    <label>Filas: <input type="number" id="inputRows" min="1" value="8"></label>
+    <label>Columnas: <input type="number" id="inputCols" min="1" value="8"></label>
+    <button onclick="showBoard()">Generar tablero</button>
+    <br>
+    <div id="board" class="board-contianer">
+    </div>
+</body>
+</html>

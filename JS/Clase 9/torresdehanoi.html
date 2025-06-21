@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Torres de Hanoi</title>
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .towers-container {
+      display: grid;
+      gap: 15px;
+      margin-top: 15px;
+      min-height: 10rem;
+    }
+    .output {
+      margin-top: 80px;
+      max-height: 100px;
+      overflow-y: scroll;
+      display: flex;
+      flex-direction: column;
+    }
+    .tower {
+      min-height: 100%;
+      max-height: 100%;
+      width: 15rem;
+      border-bottom: 5px solid wheat;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      position: relative;
+      gap: 2px;
+      padding-bottom: 2px;
+      padding-top: 50px;
+    }
+    .tower-pole {
+      width: 5px;
+      height: 100%;
+      background-color: wheat;
+      position: absolute;
+      z-index: -1;
+      bottom: 0;
+      font-size: 25px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+    }
+    .tower-index {
+      background-color: #fff;
+      height: 30px;
+    }
+    .disk {
+      background-color: red;
+      height: 20px;
+      max-width: 100%;
+      min-width: 5%;
+    }
+  </style>
+  <script>
+
+    const colors = ["red", "blue", "green", "yellow", "orange", "purple", "pink", "teal", "cyan", "black", "magenta"];
+
+    // Crea Discos
+    function generateDisks(n) {
+      var towerAElement = document.getElementById('towerA');
+      var towerBElement = document.getElementById('towerB');
+      var towerCElement = document.getElementById('towerC');
+      var towerContainer = document.getElementById('towers-container');
+
+      towerAElement.innerHTML = '';
+      towerBElement.innerHTML = '';
+      towerCElement.innerHTML = '';
+
+      towerContainer.style.height = (20*n) + "px";
+      
+      for (let index = 0; index < n; index++) {
+        const newDisk = document.createElement('div');
+        newDisk.id = 'disk'+n;
+        newDisk.style.width = ((100/n) * (n-index) - 5) + '%';
+        newDisk.style.backgroundColor = index <= colors.length ? colors[index] : colors[index % 10];
+        newDisk.classList.add('disk');
+        towerAElement.appendChild(newDisk);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      generateDisks(5);
+    });
+
+    // Boton de resolver
+    function solveHanoi() {
+      const n = parseInt(document.getElementById('diskCount').value);
+      const outputElement = document.getElementById('output');
+      const steps = [];
+      generateDisks(n);
+
+      hanoi(n, 'A', 'C', 'B', steps);
+
+      showSteps(steps);
+    }
+
+
+    // Algoritmo
+    function hanoi(n, towerA, towerB, towerC, steps) {
+      if (n === 1) {
+        steps.push([towerA, towerB]);
+        return;
+      }
+
+      // Mueve el disco n-1 de la torre towerA a towerC usando towerB como auxiliar
+      hanoi(n - 1, towerA, towerC, towerB, steps);
+
+      steps.push([towerA, towerB]);
+
+      // Mueve el disco n-1 de la torre towerC a towerB usando towerA como auxiliar
+      hanoi(n - 1, towerC, towerB, towerA, steps);
+    }
+
+    function showSteps(steps) {
+      var output = document.getElementById('output');
+      output.innerText = steps.join(' | ');
+
+      steps.forEach(function(step, index){
+        setTimeout(function() {
+          const fromTowerElement = document.getElementById('tower'+step[0]);
+          const toTowerElement = document.getElementById('tower'+step[1]);
+          const lastDisk = fromTowerElement.lastElementChild;
+          toTowerElement.appendChild(lastDisk);
+          console.log(step);
+        }, 400 * index);
+      });
+    }
+
+  </script>
+</head>
+<body>
+
+  <label for="diskCount">Numero de Discos:</label>
+  <div>
+    <input type="number" id="diskCount" min="1" value="5">
+    <button onclick="solveHanoi()">Resolver</button>
+  </div>
+
+  <div id="towers-container" class="towers-container">
+    <div class="tower" style="grid-column: 2 / 3;">
+      <div class="tower-pole"><span class="tower-index">A</span></div>
+      <div style="display: contents;" id="towerA"></div>
+    </div>
+    <div class="tower" style="grid-column: 3 / 4;">
+      <div class="tower-pole"><span class="tower-index">B</span></div>
+      <div style="display: contents;" id="towerB"></div>
+    </div>
+    <div class="tower" style="grid-column: 4 / 5;">
+      <div class="tower-pole"><span class="tower-index">C</span></div>
+      <div style="display: contents;" id="towerC"></div>
+    </div>
+  </div>
+  <div class="output"><span>Output:</span> <span id="output"></span></div>
+  
+</body>
+</html>
